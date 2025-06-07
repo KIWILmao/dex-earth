@@ -1,7 +1,6 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useCallback } from 'react';
 import styled from 'styled-components';
 import { TEXT } from '../../../theme';
-import ArrowRightGrey from '../../../assets/svg-bid/arrow-right-grey.svg';
 import CurrencyLogo from '../../CurrencyLogo';
 import axios from 'axios';
 import { createChart, LineData, Time } from 'lightweight-charts';
@@ -9,10 +8,6 @@ import { useCurrency } from '../../../hooks/Tokens';
 import { useHistory } from 'react-router';
 import { chartOptions, setAreaOptions } from './chart-config';
 import { useFindTokenAddress } from '../../../state/swap/hooks';
-import ChartSm from '../../../assets/images/chartSm.png';
-import Thr from '../../../assets/images/tather.png';
-import Eth from '../../../assets/images/eth.png';
-import Media from '../../../theme/media-breackpoint';
 import { nativeSymbol } from '../../../constants';
 import { useActiveWeb3React } from 'hooks';
 
@@ -89,7 +84,7 @@ export function GraphComponent({ currency1, currency2 }: Props) {
 
   const history = useHistory();
 
-  const fetchDailyData = async () => {
+  const fetchDailyData = useCallback(async () => {
     if (!canFetch.current) {
       return;
     }
@@ -107,9 +102,9 @@ export function GraphComponent({ currency1, currency2 }: Props) {
     } catch (err) {
       console.debug('Fetch daily data', err);
     }
-  };
+  }, [currency1, currency2]);
 
-  const fetchPrice = async () => {
+  const fetchPrice = useCallback(async () => {
     try {
       const { data } = await axios.get(
         `https://min-api.cryptocompare.com/data/price?fsym=${currency1.toUpperCase()}&tsyms=${currency2.toUpperCase()}`
@@ -118,7 +113,7 @@ export function GraphComponent({ currency1, currency2 }: Props) {
     } catch (err) {
       console.debug('Fetch token price for graph', err);
     }
-  };
+  }, [currency1, currency2]);
 
   const navigateToSwap = () => {
     history.push(`/swap?inputCurrency=${addressOrEth1}&outputCurrency=${addressOrEth2}`);
@@ -127,7 +122,7 @@ export function GraphComponent({ currency1, currency2 }: Props) {
   useEffect(() => {
     fetchDailyData();
     fetchPrice();
-  }, [chainId]);
+  }, [chainId, fetchDailyData, fetchPrice]);
 
   if (!dailyData || dailyData.length === 0) {
     return null;

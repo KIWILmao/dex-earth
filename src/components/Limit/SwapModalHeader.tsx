@@ -96,7 +96,8 @@ export default function SwapModalHeader({
           <RowFlat>
             <TEXT.default fontWeight={600} fontSize={14} color="textSecondary">
               1 {trade['outputAmount'].currency.symbol} ={' '}
-              {marketPrice != '' ? (1 / Number(marketPrice)).toPrecision(6) : ''} {trade['inputAmount'].currency.symbol}
+              {marketPrice !== '' ? (1 / Number(marketPrice)).toPrecision(6) : ''}{' '}
+              {trade['inputAmount'].currency.symbol}
             </TEXT.default>
           </RowFlat>
         </RowBetween>
@@ -163,7 +164,8 @@ export default function SwapModalHeader({
           “Fee on Transfer” Tokens
         </TEXT.default>
         <TEXT.default fontWeight={500} fontSize={12} color="text6">
-          &nbsp;&nbsp;&nbsp;&bull;&nbsp;&nbsp;&nbsp;“Fee on transfer" tokens should not be used. with Limit Orders.
+          &nbsp;&nbsp;&nbsp;&bull;&nbsp;&nbsp;&nbsp;&quot;Fee on transfer&quot; tokens should not be used. with Limit
+          Orders.
         </TEXT.default>
       </ColoredWrapper>
     </AutoColumn>

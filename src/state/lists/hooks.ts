@@ -17,21 +17,21 @@ export interface TagInfo extends TagDetails {
  * Token instances created from token info.
  */
 export class WrappedTokenInfo extends Token {
-  public readonly tokenInfo: TokenInfo;
+  public readonly TokenInfo: TokenInfo;
   public readonly tags: TagInfo[];
-  constructor(tokenInfo: TokenInfo, tags: TagInfo[]) {
+  constructor(TokenInfo: TokenInfo, tags: TagInfo[]) {
     super(
-      tokenInfo.chainId,
-      toChecksumAddress(tokenInfo.address),
-      tokenInfo.decimals,
-      tokenInfo.symbol,
-      tokenInfo.name
+      TokenInfo.chainId,
+      toChecksumAddress(TokenInfo.address),
+      TokenInfo.decimals,
+      TokenInfo.symbol,
+      TokenInfo.name
     );
-    this.tokenInfo = tokenInfo;
+    this.TokenInfo = TokenInfo;
     this.tags = tags;
   }
   public get logoURI(): string | undefined {
-    return this.tokenInfo.logoURI;
+    return this.TokenInfo.logoURI;
   }
 }
 /**
@@ -45,15 +45,15 @@ export function listToTokenMap(list: TokenList): TokenAddressMap {
   const result = listCache?.get(list);
   if (result) return result;
   const map = list.tokens.reduce<TokenAddressMap>(
-    (tokenMap, tokenInfo) => {
+    (tokenMap, TokenInfo) => {
       const tags: TagInfo[] =
-        tokenInfo.tags
+        TokenInfo.tags
           ?.map((tagId) => {
             if (!list.tags?.[tagId]) return undefined;
             return { ...list.tags[tagId], id: tagId };
           })
           ?.filter((x): x is TagInfo => Boolean(x)) ?? [];
-      const token = new WrappedTokenInfo(tokenInfo, tags);
+      const token = new WrappedTokenInfo(TokenInfo, tags);
       // if (token.chainId == 1 && token.chainId == 11155111 && token.chainId == 97) {
       if (tokenMap[token.chainId]?.[token.address] !== undefined) throw Error('Duplicate tokens.');
       // }

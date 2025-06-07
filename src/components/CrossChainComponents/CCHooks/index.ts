@@ -2,15 +2,15 @@ import { TokenList } from '@uniswap/token-lists/dist/types';
 import { TagInfo, WrappedTokenInfo } from '../../../state/lists/hooks';
 import { useMemo } from 'react';
 import { Token } from '@bidelity/sdk';
-// import { Chain, tokenAddresses, tokenInfo } from './types';
+// import { Chain, tokenAddresses, TokenInfo } from './types';
 
 import axios from 'axios';
 import {
   Chain,
   chains,
   tokenAddresses,
-  tokenInfo,
-  EMPTY_LIST_tokeninfo,
+  TokenInfo,
+  EmptyListTokenInfo,
   ChainIds,
   TokenAddressMaptokeninfo,
   setOutPutChainId,
@@ -23,15 +23,15 @@ export function listToTokenMap(list: TokenList): TokenAddressMaptokeninfo {
   const result = listCache?.get(list);
   if (result) return result;
   const map = list.tokens.reduce<any>(
-    (tokenMap, tokenInfo) => {
+    (tokenMap, TokenInfo) => {
       const tags: TagInfo[] =
-        tokenInfo.tags
+        TokenInfo.tags
           ?.map((tagId) => {
             if (!list.tags?.[tagId]) return undefined;
             return { ...list.tags[tagId], id: tagId };
           })
           ?.filter((x): x is TagInfo => Boolean(x)) ?? [];
-      const token = new WrappedTokenInfo(tokenInfo, tags);
+      const token = new WrappedTokenInfo(TokenInfo, tags);
       if (tokenMap[token.chainId][token.address] !== undefined) throw Error('Duplicate tokens.');
       return {
         ...tokenMap,
@@ -44,7 +44,7 @@ export function listToTokenMap(list: TokenList): TokenAddressMaptokeninfo {
         },
       };
     },
-    { ...EMPTY_LIST_tokeninfo }
+    { ...EmptyListTokenInfo }
   );
   listCache?.set(list, map);
   // console.log('here 1', map);
@@ -54,11 +54,11 @@ export function listToTokenMap(list: TokenList): TokenAddressMaptokeninfo {
 export function useTokensFromMap(
   tokenMap: TokenAddressMaptokeninfo,
   chainId: ChainIds | undefined
-): { [address: string]: tokenInfo } {
+): { [address: string]: TokenInfo } {
   return useMemo(() => {
     if (!chainId) return {};
     // reduce to just tokens
-    const mapWithoutUrls = Object.keys(tokenMap[chainId])?.reduce<{ [address: string]: tokenInfo }>(
+    const mapWithoutUrls = Object.keys(tokenMap[chainId])?.reduce<{ [address: string]: TokenInfo }>(
       (newMap, address) => {
         newMap[address] = tokenMap[chainId][address].token;
         return newMap;
@@ -73,11 +73,11 @@ export function useTokensFromMap(
 export function TokensFromMap(
   tokenMap: TokenAddressMaptokeninfo,
   chainId: ChainIds | undefined
-): { [address: string]: tokenInfo } {
+): { [address: string]: TokenInfo } {
   return useMemo(() => {
     if (!chainId) return {};
     // reduce to just tokens
-    const mapWithoutUrls = Object.keys(tokenMap[chainId])?.reduce<{ [address: string]: tokenInfo }>(
+    const mapWithoutUrls = Object.keys(tokenMap[chainId])?.reduce<{ [address: string]: TokenInfo }>(
       (newMap, address) => {
         newMap[address] = tokenMap[chainId][address].token;
         return newMap;
@@ -91,9 +91,9 @@ export function TokensFromMap(
 // TODO
 
 export function usePreSelectedCurrency(chainId: number) {
-  const _inputCurrency: tokenInfo[] = Object.values(TokensFromMap(listToTokenMap(tokenAddresses), chainId));
+  const _inputCurrency: TokenInfo[] = Object.values(TokensFromMap(listToTokenMap(tokenAddresses), chainId));
   const inArr = useMemo(() => _inputCurrency, [_inputCurrency]);
-  const _outputCurrency: tokenInfo[] = Object.values(
+  const _outputCurrency: TokenInfo[] = Object.values(
     TokensFromMap(listToTokenMap(tokenAddresses), setOutPutChainId[chainId])
   );
   const outArr = useMemo(() => _outputCurrency, [_outputCurrency]);

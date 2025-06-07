@@ -22,5 +22,5 @@ export default function useSetLiquidityTokensInUrl(
     } else if (onlyBIdExists) {
       history?.push(`/add/${usdtAddress}/${currencyIdB}`);
     }
-  }, []);
+  }, [chainId, currencyIdA, currencyIdB, history, usdtAddress]);
 }

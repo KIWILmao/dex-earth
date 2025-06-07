@@ -12,7 +12,7 @@ import {
   // walletlink,
 } from '../connectors';
 import { InjectedConnector } from '@web3-react/injected-connector';
-import { ChainId, Factory, Init_code, Router } from './contractConstants';
+import { ChainId, Factory, InitCode, Router } from './contractConstants';
 
 const chainss = {
   11155111: 'SEPOLIA',
@@ -140,7 +140,7 @@ export const BLID_ADDRESS = '0x9ea167b7a205df38d8de4da6c3d2ca58b9e5cb66'; // SEP
 export const feeLimit = 0.35;
 export const executorFee = 1e15;
 export const expire = 24 * 3600 * 90; //90 days
-export const bitquery_key = 'BQYAUI1wWPE1jS3hJXeuIq5UjVsjjOue';
+export const BitqueryKey = 'BQYAUI1wWPE1jS3hJXeuIq5UjVsjjOue';
 
 export const WETH_ADDRESS = {
   [ChainId.MAINNET]: '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2',
@@ -163,7 +163,7 @@ export const WETH_ADDRESS = {
 
 export const CFC_TOKEN_ADDRESS = '0x9BED7e1B07be88894bBf599b50E8189C55b0a888';
 
-export const Chain_To_Symboll = {
+export const ChainToSymboll = {
   '97': 'BNB',
   '11155111': 'SEP',
   '1': 'ETH',
@@ -184,7 +184,7 @@ export const getContractData = (chainId: ChainId) => {
     ROUTER_ADDRESS: Router[chainId],
     FACTORY_ADDRESS: Factory[chainId],
     CFC_TOKEN_ADDRESS: '0x9BED7e1B07be88894bBf599b50E8189C55b0a888',
-    INIT_CODE_HASH: Init_code[chainId],
+    INIT_CODE_HASH: InitCode[chainId],
   };
 };
 
@@ -411,7 +411,7 @@ export const FIVE_PERCENTS = 5;
 export const ONE_HUNDRED = 100;
 export const ZERO_STRING = '0';
 
-export const chainId_ChainName = {
+export const ChainIdChainName = {
   '11155111': 'SEPOLIA',
   '97': 'BINANCETEST',
   '80002': 'AMOY',
@@ -769,14 +769,14 @@ export const tokenAddresses = {
   ],
 };
 
-export interface tokenInfo {
+export interface TokenInfo {
   address: string;
   balance: number;
   chainId: number;
   decimals: number;
   name: string;
   symbol: string;
-  tokenInfo: {
+  TokenInfo: {
     address: string;
     chainId: string;
     decimals: number;
@@ -825,7 +825,7 @@ export type TokenAddressMap = Readonly<
   { [chainId in ChainIds]: Readonly<{ [tokenAddress: string]: { token: WrappedTokenInfo; list: TokenList } }> }
 >;
 
-export const EMPTY_LIST_tokeninfo: TokenAddressMaptokeninfo = {
+export const EmptyListTokenInfo: TokenAddressMaptokeninfo = {
   [ChainId.MAINNET]: {},
   [ChainId.BINANCETEST]: {},
   [ChainId.AMOY]: {},
@@ -844,7 +844,7 @@ export const EMPTY_LIST_tokeninfo: TokenAddressMaptokeninfo = {
 };
 
 export type TokenAddressMaptokeninfo = Readonly<
-  { [chainId in ChainId]: Readonly<{ [tokenAddress: string]: { token: tokenInfo; list: TokenList } }> }
+  { [chainId in ChainId]: Readonly<{ [tokenAddress: string]: { token: TokenInfo; list: TokenList } }> }
 >;
 
 export function combineMaps(map1: TokenAddressMap, map2: TokenAddressMap): TokenAddressMap {

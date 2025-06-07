@@ -36,7 +36,7 @@ import AccountDropdown from '../AccountDropdown';
 import { useOnClickOutside } from '../../hooks/useOnClickOutside';
 import { switchNetwork } from '../../utils/switchNetwork';
 import Media from 'theme/media-breackpoint';
-import { Network_Url } from 'constants/contractConstants';
+import { NetworkUrl } from 'constants/contractConstants';
 
 const ConnectedButton = styled.a<{ pending?: boolean }>`
   background: var(--primary);
@@ -186,15 +186,7 @@ function Web3StatusInner({ toggleDropdown }: InnerProps) {
 
   const handleWrongNetwork = () => {
     toggleWalletModal();
-    switchNetwork(
-      11155111,
-      'Sepolia TestNet',
-      Network_Url[11155111],
-      'https://etherscan.io',
-      'Wrapped ETH',
-      'WETH',
-      18
-    );
+    switchNetwork(11155111, 'Sepolia TestNet', NetworkUrl[11155111], 'https://etherscan.io', 'Wrapped ETH', 'WETH', 18);
   };
 
   const { t } = useTranslation();

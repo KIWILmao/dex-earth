@@ -123,12 +123,12 @@ export default function Pool() {
   });
   useEffect(() => {
     refetch();
-  }, [chainId]);
+  }, [chainId, refetch]);
   const trackedTokenPairs = useTrackedTokenPairs(allTokens);
 
   const tokenPairsWithLiquidityTokens = useMemo(
     () => trackedTokenPairs.map((tokens) => ({ liquidityToken: toV2LiquidityToken(tokens, chainId), tokens })),
-    [trackedTokenPairs]
+    [trackedTokenPairs, chainId]
   );
   const liquidityTokens = useMemo(
     () => tokenPairsWithLiquidityTokens.map((tpwlt) => tpwlt.liquidityToken),

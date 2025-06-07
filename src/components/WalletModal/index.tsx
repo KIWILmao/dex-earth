@@ -1,7 +1,7 @@
 import { AbstractConnector } from '@web3-react/abstract-connector';
 import { UnsupportedChainIdError, useWeb3React } from '@web3-react/core';
 import { WalletConnectConnector } from '@web3-react/walletconnect-connector';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { isMobile } from 'react-device-detect';
 import styled from 'styled-components';
 import MetamaskIcon from '../../assets/images/metamask.png';
@@ -27,7 +27,7 @@ import { InjectedConnector } from '@web3-react/injected-connector';
 import Gs from 'theme/globalStyles';
 import ErrorIco from '../../assets/images/errorIco.png';
 import MetaIcon from '../../assets/images/metamask.png';
-import { Network_Url } from 'constants/contractConstants';
+import { NetworkUrl } from 'constants/contractConstants';
 
 const ErrorConnecting = styled.div`
   text-align: center;
@@ -227,7 +227,7 @@ export default function WalletModal({
             switchNetwork(
               11155111,
               'Sepolia TestNet',
-              Network_Url[11155111],
+              NetworkUrl[11155111],
               'https://etherscan.io',
               'Wrapped ETH',
               'WETH',
@@ -248,7 +248,7 @@ export default function WalletModal({
     }
   };
 
-  const checkWallet = async () => {
+  const checkWallet = useCallback(async () => {
     if (!account) return;
     const response = await apiService.getByAddress(account);
     if (response && response?.data && !response?.data?.isActive) {
@@ -256,7 +256,7 @@ export default function WalletModal({
       localStorage.removeItem('loggedIn');
       toggleUserBlockedModal();
     }
-  };
+  }, [account, deactivate, toggleUserBlockedModal]);
 
   useEffect(() => {
     if (!account || !providerId) return;
@@ -266,7 +266,7 @@ export default function WalletModal({
   useEffect(() => {
     if (!account) return;
     checkWallet();
-  }, [account]);
+  }, [account, checkWallet]);
 
   // get wallets user can switch too, depending on device/browser
   function getOptions() {

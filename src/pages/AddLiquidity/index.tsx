@@ -60,7 +60,7 @@ import Gs from 'theme/globalStyles';
 import SwapHeader from 'components/swap/SwapHeader';
 import Media from 'theme/media-breackpoint';
 import { AutoRow } from './../../components/Row/index';
-import { chainId_ChainName, getContractData, nativeSymbol, WETH } from '../../constants/index';
+import { ChainIdChainName, getContractData, nativeSymbol, WETH } from '../../constants/index';
 
 const Addliquidity = styled.div``;
 const ALTop = styled.div`
@@ -88,7 +88,7 @@ export default function AddLiquidity({
   const { data: pairsList, refetch } = useQuery(PAIRS_LOCK_QUERY, { context: { clientName: chainId } });
   useEffect(() => {
     refetch();
-  }, [chainId]);
+  }, [chainId, refetch]);
 
   const usdtAddress = useFindTokenAddress('CFNC');
   // CHANGE THIS IF NEEDED TODO. #VISHAL
@@ -205,6 +205,30 @@ export default function AddLiquidity({
     }
     // setTxHash('');
   }, [onFieldAInput, txHash]);
+
+  const handleASwitchCurrencies = useCallback(() => {
+    if (!currencyIdA && !currencyIdB) {
+      return;
+    }
+    history.push(`/add/${currencyIdB}/${currencyIdA}`);
+    onSwitchMintCurrencies();
+  }, [currencyIdA, currencyIdB, history, onSwitchMintCurrencies]);
+
+  const handleBSwitchCurrencies = useCallback(() => {
+    if (!currencyIdA && !currencyIdB) {
+      return;
+    }
+    history.push(`/add/${currencyIdB}/${currencyIdA}`);
+    onSwitchMintCurrencies();
+  }, [currencyIdA, currencyIdB, history, onSwitchMintCurrencies]);
+
+  const handleMaxA = useCallback(() => {
+    maxAmounts[Field.CURRENCY_A] && onFieldAInput(maxAmounts[Field.CURRENCY_A]?.toExact() ?? '');
+  }, [maxAmounts, onFieldAInput]);
+
+  const handleMaxB = useCallback(() => {
+    maxAmounts[Field.CURRENCY_B] && onFieldBInput(maxAmounts[Field.CURRENCY_B]?.toExact() ?? '');
+  }, [maxAmounts, onFieldBInput]);
 
   async function onAdd() {
     if (!chainId || !library || !account) return;
@@ -359,7 +383,7 @@ export default function AddLiquidity({
         history.push(`/add/${newCurrencyIdA}/${currencyIdB}`);
       }
     },
-    [currencyIdB, history, currencyIdA]
+    [currencyIdB, history, currencyIdA, chainId]
   );
   const handleCurrencyBSelect = useCallback(
     (currencyB: Currency) => {
@@ -374,31 +398,7 @@ export default function AddLiquidity({
         history.push(`/add/${currencyIdA ? currencyIdA : nativeSymbol[chainId || 1]}/${newCurrencyIdB}`);
       }
     },
-    [currencyIdA, history, currencyIdB]
-  );
-
-  const handleASwitchCurrencies = () => {
-    if (!currencyIdA && !currencyIdB) {
-      return;
-    }
-    history.push(`/add/${currencyIdB}/${currencyIdA}`);
-    onSwitchMintCurrencies();
-  };
-
-  const handleMaxFieldAAmount = useCallback(
-    (percents: number) => {
-      maxAmounts[Field.CURRENCY_A] &&
-        onFieldAInput(((+maxAmounts[Field.CURRENCY_A]?.toExact()! * percents) / 100).toString());
-    },
-    [maxAmounts[Field.CURRENCY_A], onFieldAInput]
-  );
-
-  const handleMaxFieldBAmount = useCallback(
-    (percents: number) => {
-      maxAmounts[Field.CURRENCY_B] &&
-        onFieldBInput(((+maxAmounts[Field.CURRENCY_B]?.toExact()! * percents) / 100).toString());
-    },
-    [maxAmounts[Field.CURRENCY_B], onFieldBInput]
+    [currencyIdA, history, currencyIdB, chainId]
   );
 
   const v2Pair = usePair(currencyA ? currencyA : undefined, currencyB ? currencyB : undefined);
@@ -500,7 +500,7 @@ export default function AddLiquidity({
                       id="add-liquidity-input-tokena"
                       showCommonBases
                     />
-                    <AmountTabs onChange={handleMaxFieldAAmount} />
+                    <AmountTabs onChange={handleMaxA} />
                   </AmountBox>
 
                   {/* {!!maxAmounts[Field.CURRENCY_A]?.toExact() && (
@@ -533,7 +533,7 @@ export default function AddLiquidity({
                       id="add-liquidity-input-tokenb"
                       showCommonBases
                     />
-                    <AmountTabs onChange={handleMaxFieldBAmount} />
+                    <AmountTabs onChange={handleMaxB} />
                   </AmountBox>
                   {/* {!!maxAmounts[Field.CURRENCY_B]?.toExact() && (
                     <TEXT.secondary fontWeight={600} fontSize={12}>

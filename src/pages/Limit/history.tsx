@@ -254,9 +254,9 @@ export default function History() {
     };
 
     update();
-  }, [block, account, chainId]);
+  }, [block, account, chainId, library]);
   const addTransaction = useTransactionAdder();
-  const select_order = (
+  const SelectOrder = (
     index: number,
     assetIn: object,
     assetOut: any,
@@ -367,7 +367,7 @@ export default function History() {
                 {order.orderState === 1 ? 'Cancelled' : 'Filled'}
                 <LinkStyledButton
                   onClick={() =>
-                    select_order(
+                    SelectOrder(
                       i,
                       {
                         amount: amountIn,
@@ -393,7 +393,7 @@ export default function History() {
             {openKind === 'open' && (
               <LinkStyledButton
                 onClick={() =>
-                  select_order(
+                  SelectOrder(
                     i,
                     {
                       amount: amountIn,

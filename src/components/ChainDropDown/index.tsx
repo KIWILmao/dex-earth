@@ -7,7 +7,7 @@ import { useWalletModalToggle } from 'state/application/hooks';
 import { useWeb3React } from '@web3-react/core';
 import { chains } from '../../constants/index';
 import Ethlogo from '../../assets/images/ethereum-logo.png';
-import { Network_Url } from 'constants/contractConstants';
+import { NetworkUrl } from 'constants/contractConstants';
 
 const DropdownWrapper = styled.div`
   display: flex;
@@ -72,7 +72,7 @@ export default function AccountDropdown({ isVisible, closeDropdown }: Props) {
         <DropdownWrapper>
           <DropdownItem
             onClick={() => {
-              handleChain(97, 'BinanceTestnet', Network_Url[97], 'https://testnet.bscscan.com', 'Binance', 'BNB', 18);
+              handleChain(97, 'BinanceTestnet', NetworkUrl[97], 'https://testnet.bscscan.com', 'Binance', 'BNB', 18);
             }}
           >
             <ItemWrapper>
@@ -92,7 +92,7 @@ export default function AccountDropdown({ isVisible, closeDropdown }: Props) {
               handleChain(
                 11155111,
                 'Sepolia TestNet',
-                Network_Url[11155111],
+                NetworkUrl[11155111],
                 'https://etherscan.io',
                 'Wrapped ETH',
                 'WETH',
@@ -119,7 +119,7 @@ export default function AccountDropdown({ isVisible, closeDropdown }: Props) {
               handleChain(
                 80002,
                 'Polygon Amoy TestNet',
-                Network_Url[80002],
+                NetworkUrl[80002],
                 'https://amoy.polygonscan.com/',
                 'MATIC',
                 'MATIC',
@@ -146,7 +146,7 @@ export default function AccountDropdown({ isVisible, closeDropdown }: Props) {
               handleChain(
                 421614,
                 'Arbitrum TestNet',
-                Network_Url[421614],
+                NetworkUrl[421614],
                 'https://sepolia.arbiscan.io/',
                 'ARB',
                 'ARB',
@@ -170,7 +170,7 @@ export default function AccountDropdown({ isVisible, closeDropdown }: Props) {
           <DropdownItem
             onClick={() => {
               // handleChain(4002);
-              handleChain(4002, 'Fantom TestNet', Network_Url[4002], 'https://testnet.ftmscan.com/', 'FTM', 'FTM', 18);
+              handleChain(4002, 'Fantom TestNet', NetworkUrl[4002], 'https://testnet.ftmscan.com/', 'FTM', 'FTM', 18);
             }}
           >
             <ItemWrapper>
@@ -191,7 +191,7 @@ export default function AccountDropdown({ isVisible, closeDropdown }: Props) {
               handleChain(
                 43113,
                 'AVALANCE TestNet',
-                Network_Url[43113],
+                NetworkUrl[43113],
                 'https://testnet.avascan.info/',
                 'Wrapped AVAX',
                 'WAVAX',
@@ -217,7 +217,7 @@ export default function AccountDropdown({ isVisible, closeDropdown }: Props) {
               handleChain(
                 11155420,
                 'Optimism TestNet',
-                Network_Url[11155420],
+                NetworkUrl[11155420],
                 'https://sepolia-optimism.etherscan.io/',
                 'Wrapped OPT',
                 'WOPT',
@@ -243,7 +243,7 @@ export default function AccountDropdown({ isVisible, closeDropdown }: Props) {
               handleChain(
                 59141,
                 'Linea TestNet',
-                Network_Url[59141],
+                NetworkUrl[59141],
                 'https://sepolia.lineascan.build/',
                 'Wrapped ETH',
                 'WLINEAETH',
@@ -269,7 +269,7 @@ export default function AccountDropdown({ isVisible, closeDropdown }: Props) {
               handleChain(
                 44787,
                 'Celo TestNet',
-                Network_Url[44787],
+                NetworkUrl[44787],
                 'https://alfajores.celoscan.io/',
                 'Wrapped CELO',
                 'WCELO',
@@ -295,7 +295,7 @@ export default function AccountDropdown({ isVisible, closeDropdown }: Props) {
               handleChain(
                 84532,
                 'Base TestNet',
-                Network_Url[84532],
+                NetworkUrl[84532],
                 'https://sepolia.basescan.org/',
                 'Wrapped ETH',
                 'WETHER',
@@ -321,7 +321,7 @@ export default function AccountDropdown({ isVisible, closeDropdown }: Props) {
               handleChain(
                 168587773,
                 'Blast TestNet',
-                Network_Url[168587773],
+                NetworkUrl[168587773],
                 'https://sepolia.blastscan.io/',
                 'Wrapped ETH',
                 'WETHER',
@@ -347,7 +347,7 @@ export default function AccountDropdown({ isVisible, closeDropdown }: Props) {
               handleChain(
                 1313161555,
                 'Aurora TestNet',
-                Network_Url[1313161555],
+                NetworkUrl[1313161555],
                 'https://explorer.testnet.aurora.dev/',
                 'Wrapped ETH',
                 'WETHER',
@@ -373,7 +373,7 @@ export default function AccountDropdown({ isVisible, closeDropdown }: Props) {
               handleChain(
                 534351,
                 'Scroll TestNet',
-                Network_Url[534351],
+                NetworkUrl[534351],
                 'https://sepolia.scrollscan.com/',
                 'Wrapped ETH',
                 'WETHER',
@@ -399,7 +399,7 @@ export default function AccountDropdown({ isVisible, closeDropdown }: Props) {
               handleChain(
                 1287,
                 'Moonbase TestNet',
-                Network_Url[1287],
+                NetworkUrl[1287],
                 'https://moonbase.moonscan.io/',
                 'Wrapped DEV',
                 'WDEV',

@@ -241,7 +241,7 @@ export default function SwapSection() {
         return undefined;
       }
     },
-    [v2Pair]
+    [v2Pair, chainId]
   );
 
   const currencyAPoolAmount = useMemo(() => {
@@ -373,55 +373,47 @@ export default function SwapSection() {
   const joinedIds = coinIds.join(',');
 
   const imgUrl = `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=${joinedIds}`;
-  const [tokensPrices, setTokenPrices] = useState<TokenPrices | null>(null);
-
   const [currencyImg, setCurrencyImg] = useState<CurrencyData[] | null>(null);
+  const [tokensPrices, setTokensPrices] = useState<TokenPrices | null>(null);
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const fetchImages = async () => {
-    setIsLoading(true);
+  const fetchImages = useCallback(async () => {
     try {
-      const storedData = localStorage.getItem('currencyData');
-      if (storedData) {
-        const { data, timestamp } = JSON.parse(storedData);
-        const currentTime = new Date().getTime();
-        const dataAge = currentTime - timestamp;
-        const maxAge = 60 * 60 * 1000; // 1 hour
-        if (dataAge < maxAge) {
-          setCurrencyImg(data);
-          return;
-        }
-      }
-
-      const response = await axios.get<CurrencyData[]>(imgUrl);
-      const newData = response.data;
-      localStorage.setItem('currencyData', JSON.stringify({ data: newData, timestamp: new Date().getTime() }));
-      setCurrencyImg(newData);
+      const response = await axios.get<CurrencyData[]>('https://api.coingecko.com/api/v3/coins/markets', {
+        params: {
+          vsCurrency: 'usd',
+          order: 'market_cap_desc',
+          perPage: 100,
+          page: 1,
+          sparkline: false,
+        },
+      });
+      setCurrencyImg(response.data);
     } catch (error) {
-      console.error('Error fetching currency data:', error);
-      throw error;
-    } finally {
-      setIsLoading(false);
+      console.error('Error fetching images:', error);
     }
-  };
+  }, []);
 
-  const fetchPrices = async () => {
-    setIsLoading(true);
+  const fetchPrices = useCallback(async () => {
     try {
-      const { data } = await axios.get<TokenPrices>(url);
-      setTokenPrices(data);
+      const response = await axios.get<TokenPrices>('https://api.coingecko.com/api/v3/simple/price', {
+        params: {
+          ids: 'bitcoin,ethereum,tether,binancecoin,cardano,solana,ripple,polkadot,dogecoin,avalanche-2',
+          vsCurrencies: 'usd',
+          include24hrChange: true,
+        },
+      });
+      setTokensPrices(response.data);
     } catch (error) {
-      throw error;
-    } finally {
-      setIsLoading(false);
+      console.error('Error fetching prices:', error);
     }
-  };
+  }, []);
 
   useEffect(() => {
     fetchPrices();
     fetchImages();
-  }, []);
+  }, [fetchPrices, fetchImages]);
 
   return (
     <>

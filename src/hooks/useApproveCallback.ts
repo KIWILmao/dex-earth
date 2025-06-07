@@ -16,7 +16,7 @@ import {
   useApproveTokensModalToggle,
   useErrorModalToggle,
 } from '../state/application/hooks';
-import { chainId_ChainName } from '../constants';
+import { ChainIdChainName } from '../constants';
 
 export enum ApprovalState {
   UNKNOWN,

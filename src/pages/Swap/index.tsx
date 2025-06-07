@@ -229,7 +229,7 @@ export default function Swap() {
       [independentField]: typedValue,
       [dependentField]: dependentTokenAmount,
     };
-  }, [dependentField, independentField, parsedAmounts, showWrap, typedValue, inputCurrencyName, swapFee]);
+  }, [dependentField, independentField, parsedAmounts, showWrap, typedValue, inputCurrencyName, swapFee, chainId]);
 
   const v2Pair = usePair(currencyA ? currencyA : undefined, currencyB ? currencyB : undefined);
   const getCurrencyPoolAmount = useCallback(
@@ -258,7 +258,7 @@ export default function Swap() {
         return undefined;
       }
     },
-    [v2Pair]
+    [v2Pair, chainId]
   );
 
   const currencyAPoolAmount = useMemo(() => {

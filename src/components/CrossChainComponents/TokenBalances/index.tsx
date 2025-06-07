@@ -1,12 +1,6 @@
-// import Web3 from 'web3';
 import ERC20_ABI from './ERC20_ABI.json';
-import { AbiItem } from 'web3-utils';
 import { ethers } from 'ethers';
-// import { useActiveWeb3React } from './../../hooks/index';
-import { Currency } from '@bidelity/sdk';
-import { TokenList } from '@uniswap/token-lists/dist/types';
-import { chainId_ChainName } from '../../../constants';
-import { ChainId, Network_Url } from 'constants/contractConstants';
+import { ChainId, NetworkUrl } from 'constants/contractConstants';
 
 export async function fetchBalances(validatedTokens: any, userAddress: string, chainId: ChainId) {
   interface TokenBalance {
@@ -14,7 +8,7 @@ export async function fetchBalances(validatedTokens: any, userAddress: string, c
     balance: string;
   }
   const tokens = validatedTokens;
-  const web3 = new ethers.providers.JsonRpcProvider(Network_Url[chainId]);
+  const web3 = new ethers.providers.JsonRpcProvider(NetworkUrl[chainId]);
 
   try {
     const balances: TokenBalance[] = await Promise.all(

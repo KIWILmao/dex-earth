@@ -152,11 +152,6 @@ export default function CurrencyInputPanel({
 }: CurrencyInputPanelProps) {
   const [modalOpen, setModalOpen] = useState(false);
 
-  const [showTooltip, setShowTooltip] = useState<boolean>(false);
-
-  const openTooltip = useCallback(() => setShowTooltip(true), [Tooltip]);
-  const closeTooltip = useCallback(() => setShowTooltip(false), [Tooltip]);
-
   const currencyName =
     currency && currency.symbol && currency.symbol.length > 20
       ? currency.symbol.slice(0, 4) + '...' + currency.symbol.slice(currency.symbol.length - 5, currency.symbol.length)

@@ -1,12 +1,12 @@
 import { useFactoryContract } from './useContract';
 import { ethers } from 'ethers';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 
 export function useSwapPercents() {
   const [fee, setFee] = useState('');
   const factory = useFactoryContract();
 
-  const getFees = async (): Promise<string | void> => {
+  const getFees = useCallback(async (): Promise<string | void> => {
     try {
       const swapBN = await factory?.swapFeeBP();
       const swapFee = ethers.utils.formatUnits(swapBN, 2);
@@ -16,11 +16,11 @@ export function useSwapPercents() {
     } catch (err) {
       console.error(err);
     }
-  };
+  }, [factory]);
 
   useEffect(() => {
     getFees();
-  }, [factory]);
+  }, [factory, getFees]);
 
   return Number(fee);
 }

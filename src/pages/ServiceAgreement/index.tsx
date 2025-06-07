@@ -34,11 +34,11 @@ export default function ServiceAgreement() {
               Last modified: May 05, 2023
             </TEXT.primary>
             <TEXT.secondary fontSize={14} fontWeight={500} lineHeight="24px">
-              These Terms of Service (the "Agreement") explains the terms and conditions by which you may access and use
-              https://chief-finance.com and any subdomains associated with the Website. You must read this Agreement
-              carefully as it governs your use of the Website. By accessing or using the Website, you signify that you
-              have read, understand, and agree to be bound by this Agreement in its entirety. If you do not agree, you
-              are not authorized to access or use the Website and should not use the Website.
+              These Terms of Service (the &quot;Agreement&quot;) explains the terms and conditions by which you may
+              access and use https://chief-finance.com and any subdomains associated with the Website. You must read
+              this Agreement carefully as it governs your use of the Website. By accessing or using the Website, you
+              signify that you have read, understand, and agree to be bound by this Agreement in its entirety. If you do
+              not agree, you are not authorized to access or use the Website and should not use the Website.
             </TEXT.secondary>
             <TEXT.secondary fontSize={14} fontWeight={500} lineHeight="24px">
               NOTICE: This Agreement contains important information, including a binding arbitration provision and a
@@ -53,9 +53,9 @@ export default function ServiceAgreement() {
             </TEXT.primary>
             <TEXT.secondary fontSize={14} fontWeight={500} lineHeight="24px">
               The Website provides access to (a) a decentralized protocol on various public blockchains, including but
-              not limited to Ethereum Chain, that allow users to trade certain compatible digital assets ("the Chief
-              Finance protocol" or the "Protocol"), among other services. The Website is one, but not the exclusive,
-              means of accessing the Protocol.
+              not limited to Ethereum Chain, that allow users to trade certain compatible digital assets (&quot;the
+              Chief Finance protocol&quot; or the &quot;Protocol&quot;), among other services. The Website is one, but
+              not the exclusive, means of accessing the Protocol.
             </TEXT.secondary>
             <TEXT.secondary fontSize={14} fontWeight={500} lineHeight="24px">
               To access the Website, you must use non-custodial wallet software, which allows you to interact with

@@ -205,7 +205,7 @@ export default function CurrencyList({
     };
 
     fetchCurrentBalances();
-  }, [account, validatedTokens]);
+  }, [account, validatedTokens, chainId]);
 
   // fetchBalances(tokenAddresses);
   return (

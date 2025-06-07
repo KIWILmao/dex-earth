@@ -61,7 +61,7 @@ export default function RemoveLiquidity({
   const { data: pairsList, refetch } = useQuery(PAIRS_LOCK_QUERY, { context: { clientName: chainId } });
   useEffect(() => {
     refetch();
-  }, [chainId]);
+  });
   const [currencyA, currencyB] = [useCurrency(currencyIdA) ?? undefined, useCurrency(currencyIdB) ?? undefined];
 
   const [tokenA, tokenB] = useMemo(
@@ -343,6 +343,27 @@ export default function RemoveLiquidity({
     }
   }
 
+  const SliderBx = styled.div`
+    background: #fff;
+    border-radius: 10px;
+    width: 100%;
+    padding: 12px 19px 20px;
+    margin: 42px 0 80px 0;
+    position: relative;
+    label {
+      font-weight: 500;
+      position: absolute;
+      top: -37px;
+      left: -2px;
+    }
+    .SliderVal {
+      margin: 0 0 30px 0;
+      font-weight: 600;
+      color: var(--txtColor);
+      font-size: 24px;
+    }
+  `;
+
   const Switch = styled.div`
     display: block;
     text-align: center;
@@ -511,7 +532,7 @@ export default function RemoveLiquidity({
     return () => {
       setInnerLiquidityPercentage(0);
     };
-  }, []);
+  });
 
   const isLocked = pairsList && pairsList?.pairs && pair ? isPairLocked(pairsList.pairs, pair) : false;
 
@@ -882,27 +903,6 @@ const ALTop = styled.div`
     margin: 0;
     font-size: 15px;
     font-weight: 500;
-  }
-`;
-
-const SliderBx = styled.div`
-  background: #fff;
-  border-radius: 10px;
-  width: 100%;
-  padding: 12px 19px 20px;
-  margin: 42px 0 80px 0;
-  position: relative;
-  label {
-    font-weight: 500;
-    position: absolute;
-    top: -37px;
-    left: -2px;
-  }
-  .SliderVal {
-    margin: 0 0 30px 0;
-    font-weight: 600;
-    color: var(--txtColor);
-    font-size: 24px;
   }
 `;
 

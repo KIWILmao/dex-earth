@@ -93,7 +93,7 @@ export function ChainSearch({ onDismiss, isOpen, selectedChain, otherSelectedCha
         setError('No results found.');
       }
     },
-    [setSearchQuery, chains, setFilteredChains]
+    [setSearchQuery, setFilteredChains]
   );
 
   const [open, toggle] = useToggle(false);

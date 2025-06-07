@@ -226,12 +226,59 @@ export default function ControlPanel() {
   const [actualOutAmount, setActualOutAmount] = useState('');
   const [marketPrice, setMarketPrice] = useState('');
   const [diffMarket, setDiffMarket] = useState(0);
-  const myOnSwitchTokens = () => {
-    onSwitchTokens();
-    setLimitPrice('');
-    setActualInputAmount('');
-    setActualOutAmount('');
-  };
+  const updateLimitAmounts = useCallback(
+    (inAmount: string, outAmount: string, limit: string) => {
+      if (limit != '') {
+        if (inAmount == '') {
+          if (outAmount !== '') {
+            inAmount = (Number(outAmount) / Number(limit)).toFixed(8);
+            setActualInputAmount(inAmount);
+          }
+        } else {
+          if (inAmount !== '') {
+            outAmount = (Number(inAmount) * Number(limit)).toFixed(8);
+            setActualOutAmount(outAmount);
+          }
+        }
+      } else {
+        if (inAmount == '') {
+          setActualInputAmount('');
+        } else {
+          setActualOutAmount('');
+        }
+      }
+    },
+    [setActualInputAmount, setActualOutAmount]
+  );
+
+  const myOnUserInput = useCallback(
+    (io: Field, value: string) => {
+      onUserInput(io, value);
+
+      if (io == Field.INPUT) {
+        setActualInputAmount(value);
+        updateLimitAmounts(value, '', limitPrice);
+      } else {
+        setActualOutAmount(value);
+        updateLimitAmounts('', value, limitPrice);
+      }
+    },
+    [onUserInput, updateLimitAmounts, limitPrice]
+  );
+
+  const handleTypeInput = useCallback(
+    (value: string) => {
+      myOnUserInput(Field.INPUT, value);
+    },
+    [myOnUserInput]
+  );
+
+  const handleTypeOutput = useCallback(
+    (value: string) => {
+      myOnUserInput(Field.OUTPUT, value);
+    },
+    [myOnUserInput]
+  );
 
   const isValidLimit = actualOutAmount != '' && actualInputAmount != '';
   const isValid = !swapInputError && isValidLimit;
@@ -281,7 +328,7 @@ export default function ControlPanel() {
       [independentField]: typedValue,
       [dependentField]: dependentTokenAmount,
     };
-  }, [dependentField, independentField, parsedAmounts, showWrap, typedValue, inputCurrencyName, swapFee]);
+  }, [chainId, dependentField, independentField, parsedAmounts, showWrap, typedValue, inputCurrencyName, swapFee]);
 
   const v2Pair = usePair(currencyA ? currencyA : undefined, currencyB ? currencyB : undefined);
   const getCurrencyPoolAmount = useCallback(
@@ -310,7 +357,7 @@ export default function ControlPanel() {
         return undefined;
       }
     },
-    [v2Pair]
+    [chainId, v2Pair]
   );
 
   const currencyAPoolAmount = useMemo(() => {
@@ -326,32 +373,6 @@ export default function ControlPanel() {
       ? (+formattedAmounts[Field.INPUT] / +currencyAPoolAmount) * 100
       : undefined;
   }, [currencyAPoolAmount, formattedAmounts]);
-
-  const myOnUserInput = (io: Field, value: string) => {
-    onUserInput(io, value);
-
-    if (io == Field.INPUT) {
-      setActualInputAmount(value);
-      updateLimitAmounts(value, '', limitPrice);
-    } else {
-      setActualOutAmount(value);
-      updateLimitAmounts('', value, limitPrice);
-    }
-  };
-
-  const handleTypeInput = useCallback(
-    (value: string) => {
-      myOnUserInput(Field.INPUT, value);
-    },
-    [onUserInput]
-  );
-
-  const handleTypeOutput = useCallback(
-    (value: string) => {
-      myOnUserInput(Field.OUTPUT, value);
-    },
-    [onUserInput]
-  );
 
   const userHasSpecifiedInputOutput = Boolean(
     currencies[Field.INPUT] && currencies[Field.OUTPUT] && parsedAmounts[independentField]?.greaterThan(JSBI.BigInt(0))
@@ -410,22 +431,18 @@ export default function ControlPanel() {
   //execute limit order
   const addTransaction = useTransactionAdder();
 
-  const getBigNumber = (value: number) => {
-    return BigNumber.from(toFixed(value));
-  };
-
   const toFixed = (_x: number) => {
     let rt;
     let x = Math.floor(_x);
     rt = x.toString();
     if (Math.abs(x) < 1.0) {
-      var e = parseInt(x.toString().split('e-')[1]);
+      const e = parseInt(x.toString().split('e-')[1]);
       if (e) {
         x *= Math.pow(10, e - 1);
         rt = '0.' + new Array(e).join('0') + x.toString().substring(2);
       }
     } else {
-      var e = parseInt(x.toString().split('+')[1]);
+      let e = parseInt(x.toString().split('+')[1]);
       if (e > 20) {
         e -= 20;
         x /= Math.pow(10, e);
@@ -434,6 +451,11 @@ export default function ControlPanel() {
     }
     return rt;
   };
+
+  const getBigNumber = (value: number) => {
+    return BigNumber.from(toFixed(value));
+  };
+
   const handleSwap = async () => {
     if (!chainId || !library || !account || !trade) return;
     setSwapState({ attemptingTxn: true, tradeToConfirm, showConfirm, swapErrorMessage: undefined, txHash: undefined });
@@ -443,12 +465,16 @@ export default function ControlPanel() {
 
       const bidelity = getBidlityContract(chainId, library, account);
 
-      let assetIn: string,
-        assetOut: string,
-        assetInOffered: BigNumber,
-        assetOutExpected: BigNumber,
-        path: string[] = [],
-        value;
+      const path: string[] = [];
+      trade?.route?.path?.map((token) => path.push(token.address));
+      const assetIn: string = path[0];
+      const assetOut: string = path[path.length - 1];
+      const assetInOffered: BigNumber = getBigNumber(
+        Number(actualInputAmount) * Math.pow(10, trade.route.input.decimals)
+      );
+      const assetOutExpected: BigNumber = getBigNumber(
+        Number(actualOutAmount) * Math.pow(10, trade.route.output.decimals)
+      );
 
       let orderType = 2;
       if (trade['inputAmount'].currency.symbol == nativeSymbol[chainId ? chainId : 1]) {
@@ -457,16 +483,10 @@ export default function ControlPanel() {
         orderType = 1;
       }
 
-      trade?.route?.path?.map((token) => path.push(token.address));
-      assetIn = path[0];
-      assetOut = path[path.length - 1];
-      assetInOffered = getBigNumber(Number(actualInputAmount) * Math.pow(10, trade.route.input.decimals));
-      assetOutExpected = getBigNumber(Number(actualOutAmount) * Math.pow(10, trade.route.output.decimals));
-
       const _exeFee = getBigNumber(Number(executorFee));
       const _exeFeeEth = _exeFee.add(assetInOffered.mul(getBigNumber(1e18 + 1e16 * feeLimit)).div(getBigNumber(1e18)));
 
-      value = orderType == 0 ? _exeFeeEth : getBigNumber(0);
+      const value = orderType == 0 ? _exeFeeEth : getBigNumber(0);
 
       const params = [
         orderType,
@@ -529,7 +549,7 @@ export default function ControlPanel() {
     if (txHash) {
       myOnUserInput(Field.INPUT, '');
     }
-  }, [attemptingTxn, onUserInput, swapErrorMessage, tradeToConfirm, txHash]);
+  }, [attemptingTxn, swapErrorMessage, tradeToConfirm, txHash, myOnUserInput]);
 
   const handleAcceptChanges = useCallback(() => {
     setSwapState({ tradeToConfirm: trade, swapErrorMessage, txHash, attemptingTxn, showConfirm });
@@ -545,11 +565,11 @@ export default function ControlPanel() {
 
   const handleMaxInput = useCallback(() => {
     maxAmountInput && myOnUserInput(Field.INPUT, (+maxAmountInput.toExact() / (1 + feeLimit / 100)).toFixed(6));
-  }, [maxAmountInput]);
+  }, [maxAmountInput, myOnUserInput]);
 
   const handleMaxOutput = useCallback(() => {
     maxAmountOutput && myOnUserInput(Field.OUTPUT, maxAmountOutput.toExact());
-  }, [maxAmountOutput]);
+  }, [maxAmountOutput, myOnUserInput]);
 
   const handleOutputSelect = useCallback(
     (outputCurrency) => onCurrencySelection(Field.OUTPUT, outputCurrency),
@@ -564,13 +584,13 @@ export default function ControlPanel() {
         myOnUserInput(Field.INPUT, (((+maxAmountInput.toExact() / (1 + feeLimit / 100)) * percents) / 100).toFixed(6));
       }
     },
-    [maxAmountInput, onUserInput]
+    [maxAmountInput, myOnUserInput]
   );
   const handleOutputAmount = useCallback(
     (percents: number) => {
       maxAmountOutput && myOnUserInput(Field.OUTPUT, ((+maxAmountOutput.toExact() * percents) / 100).toFixed(6));
     },
-    [maxAmountOutput, onUserInput]
+    [maxAmountOutput, myOnUserInput]
   );
 
   const toggleSuccessModal = useSuccessModalToggle();
@@ -601,22 +621,11 @@ export default function ControlPanel() {
   const outputToInputPricePrice = outputAmount / inputAmount;
   const showPrice = !isNaN(inputToOutputPrice) && !isNaN(outputToInputPricePrice);
 
-  const onUserInputLimitPrice = (price: string) => {
-    if (price === '' || inputRegex.test(escapeRegExp(price))) {
-      setLimitPrice(price);
-      if (independentField === Field.INPUT) {
-        updateLimitAmounts(actualInputAmount, '', price);
-      } else {
-        updateLimitAmounts('', actualOutAmount, price);
-      }
-    }
-  };
-
   useEffect(() => {
     if (!isNaN(inputToOutputPrice) && !isNaN(outputToInputPricePrice)) {
       setMarketPrice((outputAmount / inputAmount).toFixed(8));
     }
-  }, [outputAmount, inputAmount]);
+  }, [outputAmount, inputAmount, inputToOutputPrice, outputToInputPricePrice]);
 
   useEffect(() => {
     if (limitPrice != '' && marketPrice != '') {
@@ -636,28 +645,6 @@ export default function ControlPanel() {
       }
     } else {
       setLimitPrice('');
-    }
-  };
-
-  const updateLimitAmounts = (inAmount: string, outAmount: string, limit: string) => {
-    if (limit != '') {
-      if (inAmount == '') {
-        if (outAmount !== '') {
-          inAmount = (Number(outAmount) / Number(limit)).toFixed(8);
-          setActualInputAmount(inAmount);
-        }
-      } else {
-        if (inAmount !== '') {
-          outAmount = (Number(inAmount) * Number(limit)).toFixed(8);
-          setActualOutAmount(outAmount);
-        }
-      }
-    } else {
-      if (inAmount == '') {
-        setActualInputAmount('');
-      } else {
-        setActualOutAmount('');
-      }
     }
   };
 
@@ -804,7 +791,7 @@ export default function ControlPanel() {
                     value={limitPrice}
                     placeholder="0.0"
                     onChange={(e: any) => {
-                      onUserInputLimitPrice(e.target.value);
+                      myOnUserInput(Field.INPUT, e.target.value);
                     }}
                   />
                 </InfoSec>

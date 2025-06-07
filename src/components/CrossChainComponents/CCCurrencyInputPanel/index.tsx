@@ -8,10 +8,10 @@ import CurrencySearchModal from '../CurrencySearchModal';
 import VectorDonIcon from '../../../assets/svg-bid/vector-down.svg';
 import styled from 'styled-components';
 import { Currency, Token } from '@bidelity/sdk';
-// import { tokenInfo } from '../CCHooks/types';
+// import { TokenInfo } from '../CCHooks/types';
 import Thr from '../../../assets/images/tather.png';
 import Dwn from '../../../assets/images/arrow2.png';
-import { tokenInfo } from '../../../constants';
+import { TokenInfo } from '../../../constants';
 
 const StyledImage = styled.img`
   width: 30px;
@@ -35,8 +35,8 @@ interface CCCurrencyInputPanelProps {
   isOpen: boolean;
   onDismiss: () => void;
   onCurrencySelect: (currency: Currency) => void;
-  selectedCurrency: tokenInfo | undefined;
-  otherSelectedCurrency: tokenInfo | undefined;
+  selectedCurrency: TokenInfo | undefined;
+  otherSelectedCurrency: TokenInfo | undefined;
   showCommonBases: boolean | undefined;
   chainId: number; // You may need to define the 'Chain' type if it's a custom type
 }
@@ -63,12 +63,12 @@ export function CCCurrencyInputPanel({
     <>
       <DropDown className="ExBox-right">
         <a onClick={() => setModalOpen(true)} className="selectBtn">
-          <StyledImage src={selectedCurrency?.tokenInfo?.logoURI} alt="img" />
+          <StyledImage src={selectedCurrency?.TokenInfo?.logoURI} alt="img" />
           <span>
             Token{' '}
             <b style={{ color: 'black' }}>
               {' '}
-              {selectedCurrency ? (selectedCurrency?.tokenInfo?.symbol).slice(0, 8) : 'Select'}
+              {selectedCurrency ? (selectedCurrency?.TokenInfo?.symbol).slice(0, 8) : 'Select'}
             </b>
           </span>
           <img className="arrow" src={Dwn} alt="img" />

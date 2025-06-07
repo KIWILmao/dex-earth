@@ -26,6 +26,7 @@ export default function ChartArea({ symbol, fullscreen }: any) {
   }, [symbol, tvWidget]);
 
   useEffect(() => {
+    /* eslint-disable @typescript-eslint/camelcase */
     const tvWidget = new widget({
       symbol: '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2:0xdAC17F958D2ee523a2206206994597C13D831ec7:ETH:USDT',
       datafeed: datafeed,
@@ -41,7 +42,6 @@ export default function ChartArea({ symbol, fullscreen }: any) {
         'volume_force_overlay',
       ],
       enabled_features: [],
-
       charts_storage_url: 'https://saveload.tradingview.com',
       charts_storage_api_version: '1.1',
       client_id: 'tradingview.com',
@@ -50,6 +50,7 @@ export default function ChartArea({ symbol, fullscreen }: any) {
       autosize: true,
       studies_overrides: {},
     });
+    /* eslint-enable @typescript-eslint/camelcase */
     setTvWidget(tvWidget);
 
     return () => {

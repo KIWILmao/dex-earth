@@ -173,15 +173,15 @@ export function CurrencySearch({
     const result = listCache?.get(list);
     if (result) return result;
     const map = list.tokens.reduce<TokenAddressMap>(
-      (tokenMap, tokenInfo) => {
+      (tokenMap, TokenInfo) => {
         const tags: TagInfo[] =
-          tokenInfo.tags
+          TokenInfo.tags
             ?.map((tagId) => {
               if (!list.tags?.[tagId]) return undefined;
               return { ...list.tags[tagId], id: tagId };
             })
             ?.filter((x): x is TagInfo => Boolean(x)) ?? [];
-        const token = new WrappedTokenInfo(tokenInfo, tags);
+        const token = new WrappedTokenInfo(TokenInfo, tags);
         if (tokenMap[token.chainId][token.address] !== undefined) throw Error('Duplicate tokens.');
         return {
           ...tokenMap,

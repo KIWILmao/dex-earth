@@ -77,7 +77,17 @@ export default function ConfirmSwapModal({
         marketPrice={marketPrice}
       />
     ) : null;
-  }, [allowedSlippage, onAcceptChanges, recipient, showAcceptChanges, trade]);
+  }, [
+    allowedSlippage,
+    onAcceptChanges,
+    recipient,
+    showAcceptChanges,
+    trade,
+    actualInput,
+    actualOutput,
+    limitPrice,
+    marketPrice,
+  ]);
 
   const modalBottom = useCallback(() => {
     return trade ? (

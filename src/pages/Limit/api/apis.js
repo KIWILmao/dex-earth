@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { useSearchParams } from 'react-router-dom';
-import { bitquery_key } from '../../../constants';
+import { BitqueryKey } from '../../../constants';
 
 const endpoint = 'https://graphql.bitquery.io';
 
@@ -85,7 +85,7 @@ const configurationData = {
   supported_resolutions: ['1', '5', '15', '30', '60', '240', '1D'],
 };
 
-const get_market_price = async (buytoken, selltoken) => {
+const getMarketMprice = async (buytoken, selltoken) => {
   const _dt_now = Date.now();
   const _dt_24h = _dt_now - 24 * 3600 * 1000;
   const dt_now = new Date(_dt_now).toISOString();
@@ -104,7 +104,7 @@ const get_market_price = async (buytoken, selltoken) => {
         mode: 'cors',
         headers: {
           'Content-Type': 'application/json',
-          'X-API-KEY': bitquery_key,
+          'X-API-KEY': BitqueryKey,
         },
       }
     );
@@ -174,7 +174,7 @@ const getBars = async (symbolInfo, interval, periodParams, onHistoryCallback, on
           mode: 'cors',
           headers: {
             'Content-Type': 'application/json',
-            'X-API-KEY': bitquery_key,
+            'X-API-KEY': BitqueryKey,
           },
         }
       );
@@ -201,4 +201,4 @@ const getBars = async (symbolInfo, interval, periodParams, onHistoryCallback, on
     // onErrorCallback(err)
   }
 };
-export { getBars, resolveSymbol, get_market_price };
+export { getBars, resolveSymbol, getMarketMprice };

@@ -40,7 +40,7 @@ export function usePairs(currencies: [Currency | undefined, Currency | undefined
           ? Pair.getAddress(tokenA, tokenB, contractData.INIT_CODE_HASH, contractData.FACTORY_ADDRESS)
           : undefined;
       }),
-    [tokens]
+    [tokens, contractData.INIT_CODE_HASH, contractData.FACTORY_ADDRESS]
   );
 
   // computePairAddress

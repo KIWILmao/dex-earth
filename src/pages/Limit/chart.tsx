@@ -9,7 +9,7 @@ import { AutoRow } from '../../components/Row';
 import { TEXT } from '../../theme';
 import { useSwapState } from '../../state/swap/hooks';
 import ChartArea from './chartarea';
-import { get_market_price } from './api/apis.js';
+import { getMarketMprice } from './api/apis.js';
 import { WETH_ADDRESS, nativeSymbol } from '../../constants';
 import { useActiveWeb3React } from 'hooks';
 
@@ -29,7 +29,7 @@ const ChartWrapperParent = styled.div`
 `;
 export default function Chart({ isRefresh }: { isRefresh: boolean }) {
   const [symbol, setSymbol] = useState('');
-  const [market_price, setMarketPrice] = useState({ market_price: '', change: '', change_p: '' });
+  const [marketPrice, setMarketPrice] = useState({ marketPrice: '', change: '', changeP: '' });
   const {
     [Field.INPUT]: { currencyId: inputCurrencyId },
     [Field.OUTPUT]: { currencyId: outputCurrencyId },
@@ -48,12 +48,12 @@ export default function Chart({ isRefresh }: { isRefresh: boolean }) {
   useEffect(() => {
     let _symbol = '';
     const UpdateMarket = async (buy: any, sell: any) => {
-      const rt = await get_market_price(buy, sell);
+      const rt = await getMarketMprice(buy, sell);
       if (rt && rt.ago24h_price && rt.close_price) {
         setMarketPrice({
-          market_price: Number(rt.close_price).toPrecision(6),
+          marketPrice: Number(rt.close_price).toPrecision(6),
           change: (Number(rt.close_price) - Number(rt.ago24h_price)).toFixed(6),
-          change_p: ((Number(rt.close_price) - Number(rt.ago24h_price)) / (Number(rt.ago24h_price) * 100)).toFixed(2),
+          changeP: ((Number(rt.close_price) - Number(rt.ago24h_price)) / (Number(rt.ago24h_price) * 100)).toFixed(2),
         });
       }
     };
@@ -67,7 +67,7 @@ export default function Chart({ isRefresh }: { isRefresh: boolean }) {
     if (isRefresh) {
       UpdateMarket(outputCurrencyAddress, inputCurrencyAddress);
     }
-  }, [inputCurrencyAddress, outputCurrencyAddress, isRefresh]);
+  }, [inputCurrencyAddress, outputCurrencyAddress, isRefresh, inputCurrencyName, outputCurrencyName, symbol]);
 
   return (
     <ChartWrapperParent>
@@ -90,7 +90,7 @@ export default function Chart({ isRefresh }: { isRefresh: boolean }) {
       </AutoRow>
       <AutoRow>
         <TEXT.default fontSize={30} fontWeight={700} color="primary2">
-          {market_price.market_price}
+          {marketPrice.marketPrice}
         </TEXT.default>
         <TEXT.default
           fontSize={16}
@@ -98,7 +98,7 @@ export default function Chart({ isRefresh }: { isRefresh: boolean }) {
           color="textSecondary"
           style={{ paddingTop: '12px', height: '100%', marginLeft: '15px' }}
         >
-          {inputCurrencyName}-{outputCurrencyName} {market_price.change} ({market_price.change_p}%)
+          {inputCurrencyName}-{outputCurrencyName} {marketPrice.change} ({marketPrice.changeP}%)
         </TEXT.default>
       </AutoRow>
       <ChartArea symbol={symbol} />

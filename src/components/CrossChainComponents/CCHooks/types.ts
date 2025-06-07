@@ -102,14 +102,14 @@ export interface Chain {
 //   ],
 // };
 
-// export interface tokenInfo {
+// export interface TokenInfo {
 //   address: string;
 //   balance: number;
 //   chainId: number;
 //   decimals: number;
 //   name: string;
 //   symbol: string;
-//   tokenInfo: {
+//   TokenInfo: {
 //     address: string;
 //     chainId: string;
 //     decimals: number;

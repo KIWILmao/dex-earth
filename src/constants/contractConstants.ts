@@ -53,7 +53,7 @@ export const Factory: { [chainId in ChainId]: string } = {
   1287: '0xC8481648F5Ff2Fe46027a4E5B49165A55DE106Fd',
 };
 
-export const Init_code: { [chainId in ChainId]: string } = {
+export const InitCode: { [chainId in ChainId]: string } = {
   1: '',
   97: '0x628491fed98e5aae9a4cfc47624d316f017b5abdfe665003c6b9d5b8cb4663ea',
   80002: '0x45fd225de151e44f6fd8b19ee610de7fa06b924ed86b31e6f74aa9d5d0e2ee5b',
@@ -71,7 +71,7 @@ export const Init_code: { [chainId in ChainId]: string } = {
   1287: '0x628491fed98e5aae9a4cfc47624d316f017b5abdfe665003c6b9d5b8cb4663ea',
 };
 
-export const Network_Url: { [chainId in ChainId]: string } = {
+export const NetworkUrl: { [chainId in ChainId]: string } = {
   1: '',
   97: 'https://rpc.ankr.com/bsc_testnet_chapel/',
   80002: 'https://rpc.ankr.com/polygon_amoy',

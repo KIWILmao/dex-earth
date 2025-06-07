@@ -1,18 +1,12 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
-
-import LogoBig from '../../assets/Pngs/logo-white.png';
-import BridgeIcon from '../../assets/Pngs/Bridge.png';
-import Exchange from '../../assets/svg-bid/landing-exchange.svg';
 import { useActiveWeb3React } from '../../hooks';
 import Web3Status from '../Web3Status';
-import { TEXT } from '../../theme';
 import { useHistory, useLocation } from 'react-router-dom';
 import LanguageSwitcher from '../LanguageSwitcher';
 import { useTokenAddedModalOpen, useTokenAddedModalToggle } from '../../state/application/hooks';
 import { TokenAddedModal } from '../SearchModal/TokenAddedModal';
-import TokenList from '../home/PricesRow';
-import { Link, NavLink } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 // import ConnectWallet from '../component/ConnectWallet';
 import Gs from '../../theme/globalStyles';
 import Media from '../../theme/media-breackpoint';
@@ -26,7 +20,7 @@ import { updateCurrency } from '@bidelity/sdk';
 import { useOnClickOutside } from '../../hooks/useOnClickOutside';
 import caution from '../../assets/images/caution.png';
 // eslint-disable-next-line @typescript-eslint/camelcase
-import { chainId_ChainName } from '../../constants';
+import { ChainIdChainName } from '../../constants';
 import { useWalletModalToggle } from '../../state/application/hooks';
 
 //  OLD SCOMPONENTS
@@ -398,8 +392,6 @@ export default function Header({
     setIsShowMenu(!isShowMenu);
   };
 
-  useEffect(() => {}, []);
-
   // Chain Dropdown details
   const node = useRef<HTMLDivElement>();
 
@@ -420,7 +412,7 @@ export default function Header({
     imageLogo = caution;
   } else {
     // eslint-disable-next-line @typescript-eslint/camelcase
-    const chainname = chainId_ChainName[chainId?.toString() as keyof typeof chainId_ChainName];
+    const chainname = ChainIdChainName[chainId?.toString() as keyof typeof ChainIdChainName];
     imageLogo = `./images/${chainname}.png`;
   }
   const toggleWalletModal = useWalletModalToggle();

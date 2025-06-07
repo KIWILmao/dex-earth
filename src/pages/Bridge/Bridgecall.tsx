@@ -31,7 +31,7 @@ import {
 } from '../../components/CrossChainComponents/CCHooks';
 import { TextValues } from 'components/CrossChainComponents/StyledComponents/TextValues';
 import { fetchBalances } from 'components/CrossChainComponents/TokenBalances';
-// import { Chain, chains, tokenInfo } from 'components/CrossChainComponents/CCHooks/types';
+// import { Chain, chains, TokenInfo } from 'components/CrossChainComponents/CCHooks/types';
 
 import { useWalletModalToggle } from 'state/application/hooks';
 import { ButtonPrimary } from 'components/Button';
@@ -42,7 +42,7 @@ import styled from 'styled-components';
 import Media from 'theme/media-breackpoint';
 import QuestionHelper from 'components/QuestionHelper';
 import Gs from 'theme/globalStyles';
-import { CC_ROUTERS, Chain, chains, tokenInfo } from '../../constants';
+import { CC_ROUTERS, Chain, chains, TokenInfo } from '../../constants';
 // import chainlist from './Chainlist.json';
 
 async function Bridge(
@@ -108,8 +108,8 @@ export const Bridgecall = () => {
   const toggleModal = () => {
     setSuccessTransactionModalOpen(false);
   };
-  const [inputCurrency, setInputCurrency] = useState<tokenInfo>();
-  const [outputCurrency, setOutputCurrency] = useState<tokenInfo>();
+  const [inputCurrency, setInputCurrency] = useState<TokenInfo>();
+  const [outputCurrency, setOutputCurrency] = useState<TokenInfo>();
   const [availability, setAvailability] = useState([0, 0]);
 
   const [inputChain, setInputChain] = useState<Chain>(chains[5]);
@@ -125,7 +125,8 @@ export const Bridgecall = () => {
       }
     }
     fetch();
-  }, [inputCurrency, account]);
+  }, [inputCurrency, account, inputChain.chainId]);
+
   useEffect(() => {
     async function fetch() {
       if (outputCurrency && account) {
@@ -134,7 +135,7 @@ export const Bridgecall = () => {
       }
     }
     fetch();
-  }, [outputCurrency, account]);
+  }, [outputCurrency, account, outputChain.chainId]);
 
   const [currentchainid, setcurrentchainid] = useState(1);
 
@@ -391,13 +392,13 @@ export const Bridgecall = () => {
     setOutputChain(inputChain);
   };
 
-  const handleInputSelect = useCallback((inputCurrency: tokenInfo) => {
+  const handleInputSelect = useCallback((inputCurrency: TokenInfo) => {
     setInputCurrency(inputCurrency);
     setInputModalOpen(false);
   }, []);
 
   const handleOutputSelect = useCallback(
-    (outputCurrency: tokenInfo) => {
+    (outputCurrency: TokenInfo) => {
       setOutputModalOpen(false);
       setOutputCurrency(outputCurrency);
     },

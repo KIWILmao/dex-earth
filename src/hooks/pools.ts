@@ -1,10 +1,10 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState, useCallback } from 'react';
 import ERC20_INTERFACE from '../constants/abis/erc20';
 import { PAIR_INTERFACE } from '../data/Reserves';
 import { useMultipleContractSingleData } from '../state/multicall/hooks';
 import { useFactoryContract, useMulticallContract } from './useContract';
 import { useActiveWeb3React } from 'hooks';
-import { chainId_ChainName } from '../../src/constants/index';
+import { ChainIdChainName } from '../../src/constants/index';
 import { Factory } from 'constants/contractConstants';
 
 export interface PoolCurrency {
@@ -28,18 +28,20 @@ export function usePools(): PoolCurrency[] {
 
   const multicall = useMulticallContract();
 
-  const callData: any = [];
+  const callData = useMemo(() => {
+    const data: any = [];
+    const FACTORY_CONTRACT_PRIMARY_ADDRESS = Factory[chainId || 11155111];
 
-  const FACTORY_CONTRACT_PRIMARY_ADDRESS = Factory[chainId || 11155111];
+    for (let i = 0; i <= mockCount; i++) {
+      data.push([FACTORY_CONTRACT_PRIMARY_ADDRESS, factory?.interface.encodeFunctionData('allPairs', [i])]);
+    }
+    return data;
+  }, [chainId, factory?.interface]);
 
-  for (let i = 0; i <= mockCount; i++) {
-    callData.push([FACTORY_CONTRACT_PRIMARY_ADDRESS, factory?.interface.encodeFunctionData('allPairs', [i])]);
-  }
-
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     const [, returnData] = await multicall?.aggregate(callData);
     return returnData;
-  };
+  }, [multicall, callData]);
 
   // const fetchCount = async () => {
   //   return await factory?.allPairsLength();
@@ -47,7 +49,7 @@ export function usePools(): PoolCurrency[] {
 
   useEffect(() => {
     fetchData().then(setData);
-  }, []);
+  }, [fetchData]);
 
   const poolAddresses = useMemo(() => {
     return data.reduce((response: any, aggregateItemResult: any, i: any) => {
@@ -60,7 +62,7 @@ export function usePools(): PoolCurrency[] {
 
       return response;
     }, []);
-  }, [data]);
+  }, [data, factory?.interface]);
 
   const tokens0 = useMultipleContractSingleData(poolAddresses, PAIR_INTERFACE, 'token0');
   const tokens1 = useMultipleContractSingleData(poolAddresses, PAIR_INTERFACE, 'token1');

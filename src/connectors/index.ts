@@ -3,7 +3,7 @@ import { WalletConnectConnector } from '@web3-react/walletconnect-connector';
 import { WalletLinkConnector } from '@web3-react/walletlink-connector';
 import { NetworkConnector } from './NetworkConnector';
 import { getInjected } from '../state/swap/constant';
-import { Network_Url } from 'constants/contractConstants';
+import { NetworkUrl } from 'constants/contractConstants';
 
 export const REACT_APP_NETWORK_URL = process.env.REACT_APP_SEPOLIA_NETWORK_URL;
 
@@ -14,20 +14,20 @@ if (typeof REACT_APP_NETWORK_URL === 'undefined') {
 }
 export const network = new NetworkConnector({
   urls: {
-    11155111: Network_Url[11155111],
-    97: Network_Url[97],
-    80002: Network_Url[80002],
-    421614: Network_Url[421614],
-    4002: Network_Url[4002],
-    43113: Network_Url[43113],
-    11155420: Network_Url[11155420],
-    59141: Network_Url[59141],
-    44787: Network_Url[44787],
-    84532: Network_Url[84532],
-    168587773: Network_Url[168587773],
-    1313161555: Network_Url[1313161555],
-    534351: Network_Url[534351],
-    1287: Network_Url[1287],
+    11155111: NetworkUrl[11155111],
+    97: NetworkUrl[97],
+    80002: NetworkUrl[80002],
+    421614: NetworkUrl[421614],
+    4002: NetworkUrl[4002],
+    43113: NetworkUrl[43113],
+    11155420: NetworkUrl[11155420],
+    59141: NetworkUrl[59141],
+    44787: NetworkUrl[44787],
+    84532: NetworkUrl[84532],
+    168587773: NetworkUrl[168587773],
+    1313161555: NetworkUrl[1313161555],
+    534351: NetworkUrl[534351],
+    1287: NetworkUrl[1287],
   },
   defaultChainId: 11155111,
 });
@@ -41,7 +41,7 @@ export const injected = getInjected();
 
 // mainnet only
 export const walletconnect = new WalletConnectConnector({
-  rpc: { 5: Network_Url[11155111] },
+  rpc: { 5: NetworkUrl[11155111] },
   // rpc: { 1: REACT_APP_NETWORK_URL },
   bridge: 'https://bridge.walletconnect.org',
   qrcode: true,
@@ -62,7 +62,7 @@ export const walletconnect = new WalletConnectConnector({
 
 // mainnet only
 export const walletlink = new WalletLinkConnector({
-  url: Network_Url[11155111],
+  url: NetworkUrl[11155111],
   appName: 'Swap',
   // appLogoUrl: '',
 });

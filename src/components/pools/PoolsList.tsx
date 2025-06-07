@@ -89,7 +89,7 @@ export default function PoolsList({ search, hiddenPairs }: { search: string; hid
   });
   useEffect(() => {
     refetch();
-  }, [chainId]);
+  }, [chainId, refetch]);
 
   const pairsWithHiddenRemoved = useMemo(() => {
     if (!data) return [];

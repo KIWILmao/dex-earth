@@ -3,14 +3,13 @@ import React, { useMemo } from 'react';
 import styled from 'styled-components';
 
 import { getAddress } from 'ethers/lib/utils';
-import EthereumLogo from '../../assets/images/ethereum-logo.png';
 import BidelityLogo from '../../assets/Pngs/logo-green.png';
 import { TOKENS } from '../../constants/tokens';
 import useHttpLocations from '../../hooks/useHttpLocations';
 import { WrappedTokenInfo } from '../../state/lists/hooks';
 import Logo from '../Logo';
 import { useActiveWeb3React } from 'hooks';
-import { chainId_ChainName, Symbol } from '../../constants';
+import { ChainIdChainName, Symbol } from '../../constants';
 
 const getTokenLogoURL = (address: string) =>
   `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/${address}/logo.png`;
@@ -69,7 +68,7 @@ export default function CurrencyLogo({
 
   if (Symbol.includes(currency?.symbol as string)) {
     // eslint-disable-next-line @typescript-eslint/camelcase
-    const chainname = chainId_ChainName[chainId?.toString() as keyof typeof chainId_ChainName];
+    const chainname = ChainIdChainName[chainId?.toString() as keyof typeof ChainIdChainName];
     const imageLogo = `/images/${chainname}.png`;
     return <StyledEthereumLogo className="token" src={imageLogo} size={size} style={style} />;
   }
